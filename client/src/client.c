@@ -40,9 +40,6 @@ int main(void)
 	puerto = config_get_string_value(config, "PUERTO");
 	valor = config_get_string_value(config, "VALOR");
 
-	// Libero el archivo de configuración
-	config_destroy(config);
-
 	// Loggeamos el valor de config
 	log_info(logger, "[IP]\t%s", ip);
 	log_info(logger, "[PUERTO]\t%s", puerto);
@@ -126,4 +123,10 @@ void terminar_programa(int conexion, t_log *logger, t_config *config)
 {
 	/* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config)
 	  con las funciones de las commons y del TP mencionadas en el enunciado */
+
+	// Libero el archivo de log
+	log_destroy(logger);
+
+	// Libero el archivo de configuración
+	config_destroy(config);
 }
