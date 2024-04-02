@@ -30,8 +30,23 @@ int main(void)
 
 	// Usando el config creado previamente, leemos los valores del config y los
 	// dejamos en las variables 'ip', 'puerto' y 'valor'
+	if (!config_has_property(config, "IP") || !config_has_property(config, "PUERTO") || !config_has_property(config, "VALOR"))
+	{
+		perror("El archivo de configuracion no contiene las llaves necesarias para correr el cliente.");
+		config_destroy(config);
+		exit(EXIT_FAILURE);
+	}
+	ip = config_get_string_value(config, "IP");
+	puerto = config_get_string_value(config, "PUERTO");
+	valor = config_get_string_value(config, "VALOR");
+
+	// Libero el archivo de configuración
+	config_destroy(config);
 
 	// Loggeamos el valor de config
+	log_info(logger, "[IP]\t%s", ip);
+	log_info(logger, "[PUERTO]\t%s", puerto);
+	log_info(logger, "[VALOR]\t%s", valor);
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
@@ -74,7 +89,12 @@ t_log *iniciar_logger(void)
 
 t_config *iniciar_config(void)
 {
-	t_config *nuevo_config;
+	t_config *nuevo_config = config_create("./cliente.config");
+	if (nuevo_config == NULL)
+	{
+		perror("No se pudo leer el archivo de configuración");
+		exit(EXIT_FAILURE);
+	}
 
 	return nuevo_config;
 }
