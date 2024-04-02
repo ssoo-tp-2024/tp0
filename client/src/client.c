@@ -63,6 +63,11 @@ t_log *iniciar_logger(void)
 	t_log_level min_log_level = LOG_LEVEL_INFO; // Minimo nivel para loguear
 
 	t_log *nuevo_logger = log_create(file_name, process_name, forward_logs_to_console, min_log_level);
+	if (nuevo_logger == NULL)
+	{
+		perror("No se pudo crear el archivo de log.");
+		exit(EXIT_FAILURE);
+	}
 
 	return nuevo_logger;
 }
