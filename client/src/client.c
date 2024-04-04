@@ -103,6 +103,7 @@ void leer_consola(t_log *logger)
 	// La primera te la dejo de yapa
 	do
 	{
+		free(leido);
 		leido = readline("> ");
 		log_debug(logger, "Valor leido: %s", leido);
 	} while (strcmp(leido, ""));
