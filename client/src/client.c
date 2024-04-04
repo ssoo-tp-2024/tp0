@@ -57,6 +57,7 @@ int main(void)
 	conexion = crear_conexion(ip, puerto);
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
+	enviar_mensaje(valor, conexion);
 
 	// Armamos y enviamos el paquete
 	paquete(conexion);
@@ -135,4 +136,7 @@ void terminar_programa(int conexion, t_log *logger, t_config *config)
 
 	// Libero el archivo de configuración
 	config_destroy(config);
+
+	// Libero el socket con el server
+	liberar_conexion(conexion);
 }
