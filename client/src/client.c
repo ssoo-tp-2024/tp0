@@ -99,12 +99,13 @@ t_config *iniciar_config(void)
 
 void leer_consola(t_log *logger)
 {
-	char *leido;
+	char *leido = NULL;
 
 	// La primera te la dejo de yapa
 	do
 	{
-		free(leido);
+		if (leido != NULL)
+			free(leido);
 		leido = readline("> ");
 		log_debug(logger, "Valor leido: %s", leido);
 	} while (strcmp(leido, ""));
@@ -118,12 +119,24 @@ void leer_consola(t_log *logger)
 void paquete(int conexion)
 {
 	// Ahora toca lo divertido!
-	char *leido;
-	t_paquete *paquete;
+	char *leido = NULL;
+	t_paquete *paquete = crear_paquete();
 
 	// Leemos y esta vez agregamos las lineas al paquete
+	do
+	{
+		if (leido != NULL)
+			free(leido);
+		leido = readline("> ");
+		if (strcmp(leido, ""))
+			agregar_a_paquete(paquete, leido, strlen(leido) + 1);
+	} while (strcmp(leido, ""));
+
+	enviar_paquete(paquete, conexion);
 
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
+	eliminar_paquete(paquete);
+	free(leido);
 }
 
 void terminar_programa(int conexion, t_log *logger, t_config *config)
@@ -131,12 +144,14 @@ void terminar_programa(int conexion, t_log *logger, t_config *config)
 	/* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config)
 	  con las funciones de las commons y del TP mencionadas en el enunciado */
 
+	log_info(logger, "Terminando programa");
+
 	// Libero el archivo de log
 	log_destroy(logger);
 
-	// Libero el archivo de configuración
-	config_destroy(config);
-
 	// Libero el socket con el server
 	liberar_conexion(conexion);
+
+	// Libero el archivo de configuración
+	config_destroy(config);
 }
